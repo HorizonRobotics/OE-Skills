@@ -1,0 +1,22 @@
+# Copyright (c) 2023 Horizon Robotics.All Rights Reserved.
+#
+# The material in this file is confidential and contains trade secrets
+# of Horizon Robotics Inc. This is proprietary information owned by
+# Horizon Robotics Inc. No part of this work may be disclosed,
+# reproduced, copied, transmitted, or used in any way for any purpose,
+# without the express written permission of Horizon Robotics Inc.
+
+model_parameters:
+  working_dir: .hb_compile
+input_parameters:
+  input_name: ''
+  input_shape: ''
+  input_space_and_range: ''
+  input_type_rt: featuremap
+  input_type_train: featuremap
+compiler_parameters:
+  compile_mode: latency
+  core_num: 1
+  jobs: 32
+  max_time_per_fc: 0
+  optimize_level: O0

@@ -1,0 +1,104 @@
+# ============================================================================
+# 目标检测任务配置骨架
+# ============================================================================
+# 适用场景：YOLO 系列、SSD、RetinaNet、Faster R-CNN 等检测模型
+# 特点：多尺度输入、较大校准样本量、per_channel 校准
+#
+# 使用方式：
+#   1. 修改模型路径和 march
+#   2. 根据实际模型调整 input_shape（检测模型常用 640x640 或更大）
+#   3. 准备充足的校准数据（建议 200~500 张）
+#   4. 根据模型输出节点配置 output_nodes
+# ============================================================================
+
+model_parameters:
+  # ONNX 模型路径
+  onnx_model: './model/yolov5s.onnx'
+
+  # 目标芯片架构（必填）
+  march: 'nash-h'
+
+  # 编译输出目录
+  working_dir: './model_output'
+
+  # 输出模型文件前缀
+  output_model_file_prefix: 'yolov5s'
+
+  # 指定输出节点（分号分隔，可选）
+  # 检测模型通常有多个输出头，如不指定则使用模型默认全部输出
+  # output_nodes: 'output0;output1;output2'
+
+  # 移除冗余节点
+  remove_node_type: 'Quantize;Transpose;Dequantize;Cast;Reshape;Softmax'
+
+  # 中间层输出 dump（调试用）
+  layer_out_dump: false
+
+input_parameters:
+  # 模型输入节点名称
+  input_name: 'images'
+
+  # 输入张量形状（NCHW）
+  # 检测模型典型尺寸：1x3x640x640（YOLOv5/v8）或 1x3x416x416（YOLOv3/v4）
+  input_shape: '1x3x640x640'
+
+  # 运行时输入类型（nv12 方案，推荐）
+  input_type_rt: 'nv12'
+  input_space_and_range: 'regular'
+  input_type_train: 'bgr'
+  input_layout_train: 'NCHW'
+
+  # 归一化参数
+  # YOLO 系列通常使用 0~255 归一化（除以 255）
+  # 此处 scale_value = 1/255 ≈ 0.0039216
+  # 如果模型内部已包含归一化操作，可设为 no_preprocess
+  # mean_value: '0,0,0'
+  scale_value: '0.0039216,0.0039216,0.0039216'
+
+calibration_parameters:
+  # 校准数据目录
+  # 检测模型建议 200~500 张校准样本，覆盖不同场景
+  cal_data_dir: './calibration_data'
+
+  # 校准算法类型
+  # kl: KL 散度（推荐，精度较高）
+  # max: 最大值（速度较快，精度略低）
+  calibration_type: 'kl'
+
+  # 按通道独立校准
+  # 检测模型通常开启 per_channel 以提升量化精度
+  per_channel: true
+
+  # 最大百分位裁剪（去除极端离群值）
+  # 检测模型对离群值较敏感，建议设置 0.999~0.9999
+  max_percentile: 0.9995
+
+  # 校准预处理
+  preprocess_on: false
+
+compiler_parameters:
+  # 编译模式：latency（低延迟优先）
+  compile_mode: 'latency'
+
+  # 优化级别：O2（推荐）
+  optimize_level: 'O2'
+
+  # BPU 核心数
+  core_num: 1
+
+  # 编译并行任务数（检测模型层数较多，可适当增大）
+  jobs: 32
+
+  # 全连接层编译超时（毫秒），0 表示不限制
+  max_time_per_fc: 0
+
+  # 编译调试模式
+  debug: true
+
+  # 输入数据源
+  # nv12 输入推荐使用 pyramid（硬件预处理）
+  # input_source:
+  #   images: 'pyramid'
+
+  # 缓存模式
+  cache_mode: 'disable'

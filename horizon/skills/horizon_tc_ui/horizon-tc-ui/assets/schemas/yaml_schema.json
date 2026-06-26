@@ -1,0 +1,291 @@
+{
+  "_comment": "自动生成，请勿手工修改 | 源头: horizon_tc_ui/config/schema_yaml.py | 生成方式: python skill/scripts/export_schema.py",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "horizon_tc_ui YAML 配置 Schema",
+  "description": "从 horizon_tc_ui/config/schema_yaml.py 自动生成的 JSON Schema",
+  "type": "object",
+  "properties": {
+    "model_parameters": {
+      "type": "object",
+      "properties": {
+        "onnx_model": {
+          "type": "string"
+        },
+        "caffe_model": {
+          "type": "string"
+        },
+        "prototxt": {
+          "type": "string"
+        },
+        "march": {
+          "type": "string"
+        },
+        "log_level": {
+          "type": "integer"
+        },
+        "layer_out_dump": {
+          "type": [
+            "boolean",
+            "string",
+            "integer"
+          ]
+        },
+        "working_dir": {
+          "type": "string"
+        },
+        "output_model_file_prefix": {
+          "type": "string"
+        },
+        "output_nodes": {
+          "type": "string"
+        },
+        "remove_node_type": {
+          "type": "string"
+        },
+        "remove_node_name": {
+          "type": "string"
+        },
+        "node_info": {
+          "type": [
+            "string",
+            "object"
+          ]
+        },
+        "debug_mode": {
+          "type": "string"
+        },
+        "enable_vpu": {
+          "type": "boolean"
+        },
+        "enable_spu": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "log_level",
+        "node_info",
+        "debug_mode"
+      ]
+    },
+    "input_parameters": {
+      "type": "object",
+      "properties": {
+        "input_name": {
+          "type": "string"
+        },
+        "input_type_rt": {
+          "type": "string"
+        },
+        "input_space_and_range": {
+          "type": "string"
+        },
+        "input_type_train": {
+          "type": "string"
+        },
+        "input_layout_rt": {
+          "type": "string"
+        },
+        "input_layout_train": {
+          "type": "string"
+        },
+        "norm_type": {
+          "type": "string"
+        },
+        "input_shape": {
+          "type": "string"
+        },
+        "input_batch": {
+          "type": "string"
+        },
+        "separate_batch": {
+          "type": [
+            "boolean",
+            "string",
+            "integer"
+          ]
+        },
+        "separate_name": {
+          "type": "string"
+        },
+        "mean_value": {
+          "type": "string"
+        },
+        "scale_value": {
+          "type": "string"
+        },
+        "std_value": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "norm_type",
+        "input_shape",
+        "input_batch",
+        "separate_name",
+        "mean_value",
+        "scale_value",
+        "std_value"
+      ]
+    },
+    "calibration_parameters": {
+      "type": "object",
+      "properties": {
+        "cal_data_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "calibration_type": {
+          "type": "string"
+        },
+        "preprocess_on": {
+          "type": [
+            "boolean",
+            "string",
+            "integer"
+          ]
+        },
+        "per_channel": {
+          "type": [
+            "boolean",
+            "string",
+            "integer"
+          ]
+        },
+        "max_percentile": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "run_on_cpu": {
+          "type": "string"
+        },
+        "run_on_bpu": {
+          "type": "string"
+        },
+        "optimization": {
+          "type": "string"
+        },
+        "cal_data_type": {
+          "type": "string"
+        },
+        "quant_config": {
+          "type": [
+            "string",
+            "object",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "cal_data_dir",
+        "preprocess_on",
+        "run_on_cpu",
+        "run_on_bpu",
+        "optimization",
+        "cal_data_type"
+      ]
+    },
+    "compiler_parameters": {
+      "type": "object",
+      "properties": {
+        "compile_mode": {
+          "type": "string"
+        },
+        "debug": {
+          "type": [
+            "boolean",
+            "string",
+            "integer"
+          ]
+        },
+        "optimize_level": {
+          "type": "string"
+        },
+        "ability_entry": {
+          "type": "string"
+        },
+        "core_num": {
+          "type": "integer"
+        },
+        "max_time_per_fc": {
+          "type": "integer"
+        },
+        "jobs": {
+          "type": "integer"
+        },
+        "input_source": {
+          "type": [
+            "string",
+            "object"
+          ]
+        },
+        "advice": {
+          "type": "number"
+        },
+        "balance_factor": {
+          "type": "integer"
+        },
+        "hbdk3_compatible_mode": {
+          "type": [
+            "boolean",
+            "string",
+            "integer"
+          ]
+        },
+        "extra_params": {
+          "type": "object"
+        },
+        "cache_path": {
+          "type": "string"
+        },
+        "cache_mode": {
+          "type": "string"
+        },
+        "max_l2m_size": {
+          "type": [
+            "string",
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "ability_entry",
+        "input_source",
+        "extra_params"
+      ]
+    },
+    "custom_op": {
+      "type": "object",
+      "properties": {
+        "op_register_files": {
+          "type": "string"
+        },
+        "custom_op_method": {
+          "type": "string"
+        },
+        "custom_op_dir": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "op_register_files",
+        "custom_op_method",
+        "custom_op_dir"
+      ]
+    }
+  },
+  "required": [
+    "model_parameters",
+    "input_parameters",
+    "calibration_parameters",
+    "compiler_parameters",
+    "custom_op"
+  ]
+}

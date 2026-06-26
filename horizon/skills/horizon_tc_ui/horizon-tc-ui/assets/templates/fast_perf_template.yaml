@@ -1,0 +1,26 @@
+# Copyright (c) 2023 Horizon Robotics.All Rights Reserved.
+#
+# The material in this file is confidential and contains trade secrets
+# of Horizon Robotics Inc. This is proprietary information owned by
+# Horizon Robotics Inc. No part of this work may be disclosed,
+# reproduced, copied, transmitted, or used in any way for any purpose,
+# without the express written permission of Horizon Robotics Inc.
+
+model_parameters:
+  remove_node_type: Quantize;Transpose;Dequantize;Cast;Reshape;Softmax
+  working_dir: model_output
+input_parameters:
+  input_layout_train: NCHW
+  input_name: ''
+  input_shape: ''
+  input_space_and_range: ''
+  input_type_rt: nv12
+  input_type_train: bgr
+calibration_parameters:
+  optimization: run_fast
+compiler_parameters:
+  compile_mode: latency
+  core_num: 1
+  jobs: 0
+  max_time_per_fc: 0
+  optimize_level: O2

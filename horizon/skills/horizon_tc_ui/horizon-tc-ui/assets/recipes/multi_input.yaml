@@ -1,0 +1,125 @@
+# ============================================================================
+# 多输入任务配置骨架
+# ============================================================================
+# 适用场景：多模态模型、双分支网络、需要多个输入张量的模型
+# 特点：input_name / input_shape / input_type_* 使用列表写法
+#       多个 cal_data_dir 对应多个输入
+#
+# 使用方式：
+#   1. 修改模型路径和 march
+#   2. 根据实际模型的输入节点名称和形状配置 input_name / input_shape
+#   3. 每个输入需要独立配置 input_type_rt / input_type_train 等参数
+#   4. 每个输入需要独立的校准数据目录
+# ============================================================================
+
+model_parameters:
+  # ONNX 模型路径
+  onnx_model: './model/multi_input_model.onnx'
+
+  # 目标芯片架构（必填）
+  # 可选值：nash-b-lite, nash-b, nash-b-plus, nash-e, nash-m, nash-p, nash-h
+  march: 'nash-h'
+
+  # 编译输出目录
+  working_dir: './model_output'
+
+  # 输出模型文件前缀
+  output_model_file_prefix: 'multi_input_model'
+
+  # 移除冗余节点
+  remove_node_type: 'Quantize;Transpose;Dequantize;Cast;Reshape;Softmax'
+
+  # 中间层输出 dump
+  layer_out_dump: false
+
+input_parameters:
+  # ===== 多输入配置（YAML 列表写法） =====
+  # 多个输入节点名称，顺序必须与模型输入顺序一致
+  # 示例：一个图像输入 + 一个辅助特征输入
+  input_name:
+    - 'image'
+    - 'aux_features'
+
+  # 每个输入的形状（列表写法，与 input_name 顺序对应）
+  # 输入 1: 图像 1x3x224x224
+  # 输入 2: 辅助特征 1x128
+  input_shape:
+    - '1x3x224x224'
+    - '1x128'
+
+  # 运行时输入类型（列表写法，与 input_name 顺序对应）
+  # 输入 1 使用 nv12（图像），输入 2 使用 featuremap（特征向量）
+  input_type_rt:
+    - 'nv12'
+    - 'featuremap'
+
+  # 训练时输入类型（列表写法）
+  # 输入 1 训练时为 bgr，输入 2 训练时为 featuremap
+  input_type_train:
+    - 'bgr'
+    - 'featuremap'
+
+  # 训练时 layout（列表写法）
+  # 输入 1 为 NCHW，输入 2 为 featuremap（无需 layout）
+  input_layout_train:
+    - 'NCHW'
+    - 'NCHW'
+
+  # 输入空间与范围（列表写法）
+  # 输入 1 为 regular，输入 2 为 featuremap（无需设置）
+  # input_space_and_range:
+  #   - 'regular'
+  #   - ''
+
+  # 归一化参数（列表写法，仅对图像输入有效）
+  # featuremap 输入不需要 mean/scale/std，留空字符串即可
+  mean_value:
+    - '123.675,116.28,103.53'
+    - ''
+
+calibration_parameters:
+  # ===== 多个校准数据目录（列表写法） =====
+  # 每个输入对应一个校准数据目录，与 input_name 顺序对应
+  cal_data_dir:
+    - './calibration_data/image'
+    - './calibration_data/features'
+
+  # 校准算法类型
+  # 可选值: kl（KL 散度，推荐）, max（最大值）, skip（跳过校准）
+  calibration_type: 'kl'
+
+  # 按通道独立校准
+  per_channel: false
+
+  # 校准预处理
+  preprocess_on: false
+
+compiler_parameters:
+  # 编译模式
+  # 可选值: latency（低延迟）, bandwidth（低带宽）, balance（均衡）
+  compile_mode: 'latency'
+
+  # 优化级别（hbdk4 支持 O0, O1, O2）
+  optimize_level: 'O2'
+
+  # BPU 核心数（nash-h 支持 1~4）
+  core_num: 1
+
+  # 编译并行任务数
+  jobs: 16
+
+  # 全连接层编译超时（毫秒），0 表示不限制
+  max_time_per_fc: 0
+
+  # 编译调试模式
+  debug: true
+
+  # 输入数据源（按输入节点名称分别指定）
+  # nv12 图像输入使用 pyramid，featuremap 特征输入使用 ddr
+  input_source:
+    image: 'pyramid'
+    aux_features: 'ddr'
+
+  # 缓存模式
+  # 可选值: disable, enable, force_overwrite
+  cache_mode: 'disable'

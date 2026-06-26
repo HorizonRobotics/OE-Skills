@@ -1,0 +1,82 @@
+# =============================================================================
+# LightCompress 量化实验标准模板
+# =============================================================================
+# 使用说明：
+# 1. 复制此模板到 llm_compression/lightcompress/configs/quantization/exploration/
+# 2. 替换所有 {{placeholder}} 占位符
+# 3. 根据量化方法添加/修改 quant.special 部分
+# =============================================================================
+
+base:
+    seed: &seed 42
+
+model:
+    type: {{model_type}}              # 如: Qwen3Moe, Qwen3, InternVL2, Llama
+    path: {{model_path}}              # 模型绝对路径
+    torch_dtype: auto
+    tokenizer_mode: slow              # 避免 tokenizer 警告
+
+calib:
+    seed: *seed                       # ⚠️ 必须引用 base.seed
+    name: wikitext2
+    download: False
+    path: /jfs-public/openexplorer_llm/data/data_set/wikitext2_calib  # 默认,可用 --calib-path 覆盖
+    n_samples: 512                    # 大模型改为 64-128
+    seq_len: 2048                     # 大模型改为 1024
+    bs: 1
+    preproc: wikitext2_gptq
+
+eval:
+    eval_pos: [pretrain, fake_quant]    # 默认运行 pretrain 和 fake_quant；缓存命中时自动改为 [fake_quant]
+    name: wikitext2
+    download: False
+    path: /jfs-public/openexplorer_llm/data/data_set/wikitext2_eval  # 默认,可用 --eval-path 覆盖
+    seq_len: 2048                     # 大模型改为 1024
+    num_samples: 512                  # ⚠️ 与 calib.n_samples 对齐，加速评估
+    bs: 1
+    inference_per_block: False        # 大模型（>20GB）自动设为 True
+
+quant:
+    method: {{quant_method}}          # RTN, GPTQ, AWQ, SmoothQuant, Quarot, OmniQuant
+    weight:
+        bit: 4                        # 权重位宽
+        symmetric: True               # ⚠️ 必须为 True，不支持非对称量化（无 zero_point）
+        granularity: per_channel      # per_channel 或 per_group
+        group_size: -1                # per_group 时设为 128 或其他值
+    act:
+        bit: 8                        # 激活位宽
+        symmetric: True               # ⚠️ 必须为 True，不支持非对称量化（无 zero_point）
+        granularity: per_token
+    quant_out: False                  # ⚠️ 默认 False，除非用户显性配置
+    # special: 部分根据量化方法添加，见 methods_config.yml
+
+# ignored_layers:  # 可选，忽略特定层的量化（完全不量化）
+#     block_ids: ['0-47']
+#     layer_names: ["self_attn.q_proj", "self_attn.k_proj"]
+
+# mix_bits:  # 可选，混合精度量化（不同层使用不同位宽）
+#     setting_0:
+#         layer_name: [1#mlp.down_proj, 2#mlp.down_proj, 23#mlp.down_proj]  # 格式: {block_idx}#{layer_name}
+#         weight:
+#             bit: 8  # 这些层使用 8bit 而非默认的 4bit
+#     setting_1:
+#         layer_name: [0#self_attn.o_proj, 1#self_attn.o_proj]
+#         weight:
+#             bit: 8
+
+save:
+    save_fake: False
+    save_path: /tmp/llmc_quant/
+
+# =============================================================================
+# 大模型优化配置（脚本自动启用）
+# =============================================================================
+# 当模型 >20GB 或 MoE 专家数 >64 时，脚本自动优化：
+#
+# calib:
+#     n_samples: 32               # 512 -> 32（快速验证）
+# eval:
+#     num_samples: 32             # 与 calib.n_samples 对齐
+#     seq_len: 1024               # 2048 -> 1024
+#     inference_per_block: True   # 大模型单卡运行
+# =============================================================================

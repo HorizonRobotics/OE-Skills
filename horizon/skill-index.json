@@ -1,0 +1,262 @@
+{
+  "skillsRoot": ".horizon/skills",
+  "modules": {
+    "hbdk": {
+      "title": "HBDK",
+      "skills": [
+        "j6-hbdk-compile",
+        "hbdk-manual"
+      ]
+    },
+    "plugin": {
+      "title": "Horizon Plugin",
+      "skills": [
+        "j6-plugin-adaptation",
+        "j6-plugin-export",
+        "j6-plugin-model-check-result",
+        "j6-plugin-graph-diff",
+        "j6-plugin-hbdk-generating",
+        "j6-plugin-consistency-debug",
+        "j6-plugin-precision-tuning"
+      ]
+    },
+    "hmct": {
+      "title": "HMCT / Quantization",
+      "skills": [
+        "hmct-workflow"
+      ]
+    },
+    "ucp": {
+      "title": "UCP / Runtime",
+      "skills": [
+        "j6-ucp-infer-generating",
+        "j6-ucp-hbm-infer",
+        "j6-ucp-model-perf-eval",
+        "j6-ucp-perfetto-trace-analysis",
+        "j6-ucp-perfetto-trace-catcher",
+        "j6-board-monitor"
+      ]
+    },
+    "horizon_tc_ui": {
+      "title": "Horizon TC UI",
+      "skills": [
+        "hb-analyzer-performance",
+        "horizon-tc-ui"
+      ]
+    },
+    "llm": {
+      "title": "LLM / 量化与压缩",
+      "skills": [
+        "lightcompress-batch-quantize",
+        "lightcompress-quant-explore",
+        "llmcompression-add-model",
+        "llmcompression-operations"
+      ]
+    }
+  },
+  "paths": {
+    "hb-analyzer-performance": {
+      "version": "1.0.0",
+      "module": "horizon_tc_ui",
+      "path": ".horizon/skills/horizon_tc_ui/hb-analyzer-performance",
+      "skillFile": ".horizon/skills/horizon_tc_ui/hb-analyzer-performance/SKILL.md",
+      "description": "使用 hb_analyzer 分析 J5/J6 模型性能。当用户提到模型文件（.onnx/.bc/.hbm）并想了解性能、延时、带宽、BPU利用率、瓶颈、实测、对比时触发。常见场景：评测模型、检查性能、找瓶颈、板端测试、分析 perf JSON。关键词：\"性能\"、\"延时\"、\"带宽\"、\"BPU\"、\"瓶颈\"、\"太慢\"、\"实测\"、\"对比\"、\"评测\"、\"hb_analyzer\"。即使用户没明确说\"分析\"，只要提到模型+性能相关词就应该触发。"
+    },
+    "horizon-tc-ui": {
+      "version": "0.1.1",
+      "module": "horizon_tc_ui",
+      "path": ".horizon/skills/horizon_tc_ui/horizon-tc-ui",
+      "skillFile": ".horizon/skills/horizon_tc_ui/horizon-tc-ui/SKILL.md",
+      "description": "OpenExplorer 工具链 CLI 包的集成 Skill。适用于处理 hb_compile、hb_model_info、hb_verifier、hb_analyzer、hb_config_generator、hb_eval_preprocess 等工具相关问题，包括 YAML 配置编写、ONNX/Caffe 模型编译、PTQ 量化、HBIR/HBM 产物生成、模型信息查看、精度验证、性能分析、评估数据预处理和板端部署验证。当用户提到 OpenExplorer、horizon_tc_ui、工具链、编译模型、生成 YAML、量化、calibration、HBIR、HBM、march、fast-perf、check 模式、板端推理、定点/浮点 BC 模型判断等场景时，应优先使用本 Skill。"
+    },
+    "hbdk-manual": {
+      "version": "1.0.0",
+      "module": "hbdk",
+      "path": ".horizon/skills/hbdk/hbdk-manual",
+      "skillFile": ".horizon/skills/hbdk/hbdk-manual/SKILL.md",
+      "description": "HBDK4模型编译工具的使用指南索引，按任务场景组织"
+    },
+    "j6-hbdk-compile": {
+      "version": "1.1.8",
+      "module": "hbdk",
+      "path": ".horizon/skills/hbdk/j6-hbdk-compile",
+      "skillFile": ".horizon/skills/hbdk/j6-hbdk-compile/SKILL.md",
+      "description": "通用模型编译 skill。基于 YAML 配置文件驱动，支持 ONNX 和 BC 模型格式。支持从 PTQ config 自动提取输入预处理参数。工作流：生成配置 -> 默认必须经用户确认 -> 再执行编译与报告。Use when the user mentions 模型编译、compile、导出 hbm、生成上板产物、pyramid 输入、resizer 输入。"
+    },
+    "hmct-workflow": {
+      "version": "1.0.0",
+      "module": "hmct",
+      "path": ".horizon/skills/hmct",
+      "skillFile": ".horizon/skills/hmct/SKILL.md",
+      "description": "HMCT 模型转换与精度调优总入口。根据用户意图自动路由：\n  (1) 提供了校准数据 → 调用 reference/run_build.py build 执行完整量化构建；\n  (2) 未提供校准数据 → 调用 reference/run_build.py check 使用随机数据快速验证转换流程；\n  (3) 用户希望进行精度调优 → 转交 j6-hmct-cosine-similarity-tuning SKILL 执行多阶段调优；\n  (4) 用户希望进行单项精度 debug 分析（节点灵敏度、数据分布、累积误差等）→ 调用 hmct-debugger CLI 执行对应分析工具。\n  当用户提示词中出现 HMCT、模型转换、模型量化、PTQ、精度调优、cosine similarity、节点灵敏度、数据分布、累积误差、debug 等关键词时应触发此 Skill。"
+    },
+    "j6-hmct-cosine-similarity-tuning": {
+      "version": "2.1.1",
+      "module": "hmct",
+      "path": ".horizon/skills/hmct/j6-hmct-cosine-similarity-tuning",
+      "skillFile": ".horizon/skills/hmct/j6-hmct-cosine-similarity-tuning/SKILL.md",
+      "description": "HMCT PTQ 精度调优工作流。自动按 INT8→INT16→dual-int16→FP16 逐级验证上限，\n  结合节点敏感度分析渐进回退，找到满足 Cosine Similarity 阈值（默认 >=0.99）的\n  最小混精度 quant_config，产出达标配置与调优报告。\n  触发关键词：HMCT 精度调优、PTQ 调优、量化精度、cosine similarity 不达标、混合精度。"
+    },
+    "j6-plugin-adaptation": {
+      "version": "1.0.0",
+      "module": "plugin",
+      "path": ".horizon/skills/plugin/j6-plugin-adaptation",
+      "skillFile": ".horizon/skills/plugin/j6-plugin-adaptation/SKILL.md",
+      "description": "为用户的浮点 PyTorch 模型适配地平线机器人公司的 QAT 工具 `horizon_plugin_pytorch`。这是一个编排型 skill，必须按固定顺序依次调用：`j6-plugin-set-march` → `j6-plugin-insert-quant-dequant` → `j6-plugin-dynamic-block` → `j6-plugin-prepare` → `j6-plugin-set-fake-quantize`。"
+    },
+    "j6-plugin-export": {
+      "version": "1.0.1",
+      "module": "plugin",
+      "path": ".horizon/skills/plugin/j6-plugin-export",
+      "skillFile": ".horizon/skills/plugin/j6-plugin-export/SKILL.md",
+      "description": "使用 horizon_plugin_pytorch 的 hbdk4.export 将 QAT 模型导出为 HBIR IR 模块。以独立导出脚本的形式执行，不在训练或评测脚本中添加导出逻辑。"
+    },
+    "j6-plugin-graph-diff": {
+      "version": "1.0.0",
+      "module": "plugin",
+      "path": ".horizon/skills/plugin/j6-plugin-graph-diff",
+      "skillFile": ".horizon/skills/plugin/j6-plugin-graph-diff/SKILL.md",
+      "description": "对比两份 FX Graph 计算图文件，精确定位计算图结构和算子参数差异，并根据 diff 报告在原始模型代码中找到对应的差异位置。"
+    },
+    "j6-plugin-hbdk-generating": {
+      "version": "1.2.0",
+      "module": "plugin",
+      "path": ".horizon/skills/plugin/j6-plugin-hbdk-generating",
+      "skillFile": ".horizon/skills/plugin/j6-plugin-hbdk-generating/SKILL.md",
+      "description": "为基础网络结构生成从量化到编译的完整流程代码（set_march → Quant/DeQuant → 量化配置 → prepare → 校准 → QAT → export → convert → remove_io_op → statistics → compile HBM）。当用户需要同时覆盖量化和编译多个步骤时触发，如\"帮我写量化编译全流程代码\"、\"Conv+BN+ReLU 量化部署\"、\"地平线量化编译\"、\"基础结构量化到 HBM\"。即使用户没有明确说\"全流程\"，只要涉及从量化到编译的多个步骤都应触发。如果用户只需要量化或只需要编译，应路由到对应子 skill。关键词：\"量化编译\"、\"量化部署\"、\"全流程\"、\"set_march 到 HBM\"、\"地平线量化\"、\"Horizon 量化编译\"、\"基础结构量化\"、\"QAT 量化编译\"。"
+    },
+    "j6-plugin-model-check-result": {
+      "version": "1.0.0",
+      "module": "plugin",
+      "path": ".horizon/skills/plugin/j6-plugin-model-check-result",
+      "skillFile": ".horizon/skills/plugin/j6-plugin-model-check-result/SKILL.md",
+      "description": "在 horizon_plugin_pytorch 量化配置检查中，读取并分析 prepare 产出的 model_check_result.txt，定位模型结构与 qconfig 问题（算子融合、共享模块、qconfig 异常、averaging_constant 非默认值、算子输入浮点检查）。"
+    },
+    "j6-plugin-consistency-debug": {
+      "version": "1.0.0",
+      "module": "plugin",
+      "path": ".horizon/skills/plugin/j6-plugin-consistency-debug",
+      "skillFile": ".horizon/skills/plugin/j6-plugin-consistency-debug/SKILL.md",
+      "description": "定位 Horizon Plugin PyTorch 训练-部署一致性问题。当用户报告 QAT 模型训练侧精度正常，但 export/convert/compile/HBM 板端出现精度下降或掉点时触发。按 qat.pt → qat.export.pt → qat.bc → quantized.bc → hbm 分段定位，使用 QuantAnalysis 做逐层对比和敏感度分析。触发关键词：\"训练部署一致性\"、\"export 掉点\"、\"convert 掉点\"、\"compile 掉点\"、\"BC 精度偏差\"、\"HBM 掉点\"、\"板端精度下降\"、\"quantized.bc 不一致\"、\"pre_export 误差\"、\"一致性 debug\"。注意：仅处理训练侧正常但部署侧掉点；若 calibration/QAT 本身精度就不达标，应路由到 j6-plugin-precision-tuning。bypass 模式下参见 bypass.md。"
+    },
+    "j6-plugin-precision-tuning": {
+      "version": "1.0.0",
+      "module": "plugin",
+      "path": ".horizon/skills/plugin/j6-plugin-precision-tuning",
+      "skillFile": ".horizon/skills/plugin/j6-plugin-precision-tuning/SKILL.md",
+      "description": "floatvscalib debug 结果解读与量化误差分析（截断误差与舍入误差分类、逐算子误差归因、fix-scale 建议、compare_per_layer_out 分析）。也处理 Horizon Plugin PyTorch 侧精度调优：calibration 后精度不达标、QAT 训练 loss 不收敛或精度崩溃、int8/int16/fp16 混合精度调优。聚焦 PyTorch 侧训练/校准精度，不处理 export/convert/compile 阶段的部署一致性问题。触发关键词：\"floatvscalib\"、\"debug 结果解读\"、\"截断误差\"、\"舍入误差\"、\"compare_per_layer_out\"、\"fixscale\"、\"fix-scale\"、\"calibration 精度\"、\"QAT 精度\"、\"校准掉点\"、\"QAT loss 不收敛\"、\"混合精度\"、\"int16\"、\"fp16\"、\"sensitivity\"、\"敏感度\"、\"QconfigSetter\"、\"FixedScaleObserver\"、\"HistogramObserver\"、\"精度调优\"。注意：若训练侧精度正常但 export/convert/compile/HBM 掉点，应路由到 j6-plugin-consistency-debug。bypass 模式下参见 bypass.md。"
+    },
+    "j6-ucp-hbm-infer": {
+      "version": "1.1.0",
+      "module": "ucp",
+      "path": ".horizon/skills/ucp/j6-ucp-hbm-infer",
+      "skillFile": ".horizon/skills/ucp/j6-ucp-hbm-infer/SKILL.md",
+      "description": "Generate X86-side Python client code for hbm_infer, the Python SDK that connects to BPU boards via gRPC to deploy and run HBM model inference. Use this skill when the user wants to write Python code using hbm_infer client APIs — including HbmRpcSession (standard/flexible mode), HTensor for transmission optimization, output_config for output filtering, and related utilities like get_input_info, get_output_info, get_profile, compress_option, core_id. Triggers on writing or debugging Python inference scripts, optimizing data transfer between X86 and board, or any question about the hbm_infer Python client API."
+    },
+    "j6-ucp-infer-generating": {
+      "version": "1.1.1",
+      "module": "ucp",
+      "path": ".horizon/skills/ucp/j6-ucp-infer-generating",
+      "skillFile": ".horizon/skills/ucp/j6-ucp-infer-generating/SKILL.md",
+      "description": "提供基于 UCP 的模型推理 C++ 代码生成能力。当用户询问 UCP/DNN 推理接口怎么用、某个 API 的参数含义、如何加载模型、如何分配 tensor 内存、如何提交推理任务、Cache 同步怎么做，或要求只生成推理流程中某个模块的代码时使用。"
+    },
+    "j6-ucp-perfetto-trace-analysis": {
+      "version": "1.1.0",
+      "module": "ucp",
+      "path": ".horizon/skills/ucp/j6-ucp-perfetto-trace-analysis",
+      "skillFile": ".horizon/skills/ucp/j6-ucp-perfetto-trace-analysis/SKILL.md",
+      "description": "Use this skill whenever the user wants to quickly locate, diagnose, or analyze likely performance bottlenecks in a UCP model inference Perfetto trace. Trigger on requests about UCP inference traces, `.pftrace` files, inference latency, slow inference, pipeline stalls, CPU/BPU gaps, OpInfer delays, dispatch or response delay, low effective occupancy, critical-path investigation, or trace-based performance triage in the UCP inference path. This skill is specialized for UCP / UCP-like inference-chain performance analysis and fast bottleneck localization, not generic Perfetto profiling unrelated to UCP inference."
+    },
+    "horizon-router": {
+      "version": "0.1.11",
+      "module": null,
+      "path": ".horizon/skills/horizon-router",
+      "skillFile": ".horizon/skills/horizon-router/SKILL.md",
+      "description": "OpenExplorer 工具链入口 Skill，处理 PTQ/QAT 量化编译、板端部署、性能精度评估等请求，并将任务路由到对应的 Horizon 子 Skill。"
+    },
+    "board-detection": {
+      "version": "1.0.0",
+      "module": null,
+      "path": ".horizon/skills/horizon-router/board-detection",
+      "skillFile": ".horizon/skills/horizon-router/board-detection/SKILL.md",
+      "description": "板卡硬件平台检测 Skill。当任务涉及板端运行、板端推理、远端 HBM、性能压测或 BPU 实测，且 .horizon/.env.board 不存在或不完整时触发。自动完成板卡 IP 获取、SSH 架构探测、平台信息写入。"
+    },
+    "oe-package-detection": {
+      "version": "1.0.0",
+      "module": null,
+      "path": ".horizon/skills/horizon-router/oe-package-detection",
+      "skillFile": ".horizon/skills/horizon-router/oe-package-detection/SKILL.md",
+      "description": "OE 包环境检测 Skill。当任务涉及普通 PTQ/QAT 量化、编译、部署等工具链操作，且 .horizon/.env.oe-package 不存在时触发。自动完成 OE 包路径定位、版本采集、本地环境匹配检查、GPU/CPU Docker 判定，并将结果写入 .env 文件。LLM 相关任务（llm_compression、LightCompress、LLM 量化/推理）请路由到 oe-llm-package-detection。"
+    },
+    "oe-package-install": {
+      "version": "1.0.0",
+      "module": null,
+      "path": ".horizon/skills/horizon-router/oe-package-install",
+      "skillFile": ".horizon/skills/horizon-router/oe-package-install/SKILL.md",
+      "description": "OE 包本地安装 Skill。在 oe-package-detection 完成后触发，询问用户是否本地安装。若用户同意，则检测本地 Python / CUDA / PyTorch 版本，匹配 OE 包内 whl，创建 venv 全量安装，更新 .env 为 EXECUTION_MODE=local。"
+    },
+    "oe-llm-package-detection": {
+      "version": "1.0.0",
+      "module": null,
+      "path": ".horizon/skills/horizon-router/oe-llm-package-detection",
+      "skillFile": ".horizon/skills/horizon-router/oe-llm-package-detection/SKILL.md",
+      "description": "OE-LLM 包环境检测 Skill。仅用于 LightCompress 等依赖 OE-LLM 包的任务。当任务涉及 LightCompress 量化实验（RTN/GPTQ/AWQ/SmoothQuant PPL 评测），且 .horizon/.env.oe-llm-package 不存在时触发。注意：llm_compression 独立包不走此流程，普通 PTQ/QAT 量化请路由到 oe-package-detection。"
+    },
+    "oe-llm-package-install": {
+      "version": "1.0.0",
+      "module": null,
+      "path": ".horizon/skills/horizon-router/oe-llm-package-install",
+      "skillFile": ".horizon/skills/horizon-router/oe-llm-package-install/SKILL.md",
+      "description": "OE-LLM 包本地安装 Skill。在 oe-llm-package-detection 完成后触发，询问用户是否本地安装。若用户同意，则检测本地 Python / CUDA / PyTorch 版本，匹配 OE-LLM 包内 whl，创建 venv 全量安装，更新 .env 为 EXECUTION_MODE=local。"
+    },
+    "j6-ucp-model-perf-eval": {
+      "version": "1.0.0",
+      "module": "ucp",
+      "path": ".horizon/skills/ucp/j6-ucp-model-perf-eval",
+      "skillFile": ".horizon/skills/ucp/j6-ucp-model-perf-eval/SKILL.md",
+      "description": "自动化 hrt_model_exec perf 板端性能评测。触发条件：模型性能测试、benchmark、性能评估、板端测试、thread_num/core_id 参数扫描、吞吐量/延迟对比、远程部署 hrt_model_exec 运行 perf。"
+    },
+    "j6-ucp-perfetto-trace-catcher": {
+      "version": "1.0.0",
+      "module": "ucp",
+      "path": ".horizon/skills/ucp/j6-ucp-perfetto-trace-catcher",
+      "skillFile": ".horizon/skills/ucp/j6-ucp-perfetto-trace-catcher/SKILL.md",
+      "description": "Capture UCP (Horizon Robotics inference SDK) Perfetto traces from a J6 development board. Use this skill whenever the user wants to grab UCP traces, capture Perfetto traces on a Horizon dev board, debug UCP scheduling issues with trace data, or pull .pftrace files from a remote board. Also trigger when the user mentions UCP performance analysis, UCP trace, hrt_model_exec tracing, or BPU trace capture on J6/S1000 platforms. Do NOT use for DSP trace or Chrome trace."
+    },
+    "j6-board-monitor": {
+      "version": "1.0.0",
+      "module": "ucp",
+      "path": ".horizon/skills/ucp/j6-board-monitor",
+      "skillFile": ".horizon/skills/ucp/j6-board-monitor/SKILL.md",
+      "description": "J6 开发板资源监控与推理期间资源采集。当用户需要监控 BPU 占用率、DDR 带宽、内存使用时触发。支持三种场景：(1) Scenario A：CV 模型在指定帧率推理期间同步采集 BPU/DDR/内存数据；(2) Scenario B：独立监控板端硬件资源（无推理负载）；(3) Scenario C：LLM 模型循环推理期间同步采集资源数据，使用 simple_demo_request 保持模型持续运行。关键词：BPU 监控、DDR 带宽、内存使用、资源监控、LLM 推理监控、simple_demo_request、hrt_ucp_monitor、hrut_ddr、板端资源评估。也适用于 LLM 模型板端推理期间的资源监控（配合循环推理脚本）。注意：不要用 hbm_infer/gRPC 做高频推理监控（通信开销太大）。"
+    },
+    "lightcompress-batch-quantize": {
+      "version": "2.0.3",
+      "module": "llm",
+      "path": ".horizon/skills/llm/lightcompress/lightcompress-batch-quantize",
+      "skillFile": ".horizon/skills/llm/lightcompress/lightcompress-batch-quantize/SKILL.md",
+      "description": "批量执行 LightCompress 量化实验并生成对比表。当用户要求对多个模型、多种量化方法或多种配置进行批量量化实验时触发。编排型 skill，循环调用 lightcompress-quant-explore。触发关键词：批量量化、批量实验、多模型量化、量化对比、LightCompress 批量、跑一组实验。"
+    },
+    "lightcompress-quant-explore": {
+      "version": "2.0.3",
+      "module": "llm",
+      "path": ".horizon/skills/llm/lightcompress/lightcompress-quant-explore",
+      "skillFile": ".horizon/skills/llm/lightcompress/lightcompress-quant-explore/SKILL.md",
+      "description": "执行单个 LightCompress 量化实验并生成精度报告。当用户要求运行量化实验、量化精度测试或 PPL 评估时触发。触发关键词：量化实验、LightCompress、PPL 评估、量化精度测试、RTN、GPTQ、SmoothQuant、AWQ、跑个实验、量化探索。支持模型：Qwen、InternVL、DeepSeek、Gemma4 等。"
+    },
+    "llmcompression-add-model": {
+      "version": "2.0.3",
+      "module": "llm",
+      "path": ".horizon/skills/llm/llm_compression/llmcompression-add-model",
+      "skillFile": ".horizon/skills/llm/llm_compression/llmcompression-add-model/SKILL.md",
+      "description": "为 llm_compression 框架新增 LLM/VLM 模型支持。当用户需要在 llm_compression/models/ 中接入新模型时触发。触发关键词：新增模型、接入模型、add model、llm_compression 模型、模型适配、模型注册、模型集成。注意：llm_compression 是独立于 OE 的包，使用独立的 conda 环境。日常操作（校准/编译/评测）请路由到 llmcompression-operations。"
+    },
+    "llmcompression-operations": {
+      "version": "2.0.2",
+      "module": "llm",
+      "path": ".horizon/skills/llm/llm_compression/llmcompression-operations",
+      "skillFile": ".horizon/skills/llm/llm_compression/llmcompression-operations/SKILL.md",
+      "description": "llm_compression 日常操作 Skill。覆盖校准(calib.sh)、GPU精度评测(torch_eval.sh)、HBM编译(compile.sh)、板端精度评测(hbm_rpc_eval.sh)、量化分析(quant_analysis.sh)的标准用法。触发关键词：校准、calib、torch_eval、compile、hbm_rpc_eval、quant_analysis、LLM编译、LLM量化评测、板端推理评测。注意：llm_compression 是独立于 OE 的工具包，不走 OE/OE-LLM 包检查流程。新增模型支持请路由到 llmcompression-add-model。"
+    }
+  }
+}

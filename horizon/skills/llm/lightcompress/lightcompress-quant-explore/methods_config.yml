@@ -1,0 +1,101 @@
+# =============================================================================
+# 各量化方法的 special 参数配置
+# =============================================================================
+# 使用说明：
+# 1. 从 base_template.yml 复制基础配置
+# 2. 根据量化方法，将对应的 special 部分添加到 quant 节点下
+# 3. 需要特殊 weight/act 配置的方法，参考下方"特殊配置"部分
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# RTN (Round-To-Nearest)
+# -----------------------------------------------------------------------------
+# 最简单的量化方法，无 special 参数
+# 直接使用 base_template 的 weight/act 配置即可
+special_rtn: {}
+
+
+# -----------------------------------------------------------------------------
+# GPTQ
+# -----------------------------------------------------------------------------
+# ⚠️ 重要：blocksize 必须与 granularity/group_size 匹配！
+# ⚠️ 重要：true_sequential 默认为 False，除非用户显性配置为 True
+# ⚠️ 重要：quant_out 默认为 False，除非用户显性配置为 True
+#
+# per_channel 模式（推荐）：
+special_gptq_per_channel: &gptq_per_channel
+    actorder: True
+    static_groups: False
+    percdamp: 0.01
+    blocksize: -1              # ⚠️ per_channel 时必须为 -1
+    true_sequential: False     # ⚠️ 默认 False，MoE 必须为 False
+#
+
+# -----------------------------------------------------------------------------
+# AWQ
+# -----------------------------------------------------------------------------
+special_awq: &awq
+    trans: True
+    trans_version: v2
+    weight_clip: True
+    clip_sym: True
+
+
+# -----------------------------------------------------------------------------
+# SmoothQuant
+# -----------------------------------------------------------------------------
+special_smoothquant: &smoothquant
+    alpha: 0.5                # 0.5-1.0，越大越平滑。实测 Qwen3 W4A8 场景 0.5 显著优于 0.85
+
+
+# -----------------------------------------------------------------------------
+# QuaRot (四元旋转量化)
+# -----------------------------------------------------------------------------
+# ⚠️ 注意：LightCompress 当前不支持 online_rotate=True，必须设为 False
+special_quarot: &quarot
+    rotate_mode: hadamard
+    fp32_had: True
+    online_rotate: False
+    # QuaRot 需要额外的 weight 配置
+    weight:
+        calib_algo: minmax
+
+
+# -----------------------------------------------------------------------------
+# OmniQuant (Learnable Weight Clipping)
+# -----------------------------------------------------------------------------
+special_omniquant: &omniquant
+    aug_loss: False
+    let: False                  # Learnable Equivalent Transformation
+    lwc: True                  # Learnable Weight Clipping
+    lwc_lr: 0.01
+    let_lr: 0.005
+    use_shift: False
+    alpha: 0.5
+    deactive_amp: True
+    epochs: 20
+    wd: 0
+    # OmniQuant 需要额外的 weight/act 配置
+    weight:
+        calib_algo: learnable
+        ste: True
+    act:
+        ste: True
+
+
+
+# =============================================================================
+# 快速配置参考表
+# =============================================================================
+#
+# | 方法       | special 参数                    | 需要额外 weight/act 配置 |
+# |------------|--------------------------------|-------------------------|
+# | RTN        | 无                             | 否                      |
+# | GPTQ       | actorder, blocksize, percdamp  | 否                      |
+# | AWQ        | trans, weight_clip             | 否                      |
+# | SmoothQuant| alpha                          | 否                      |
+# | QuaRot     | rotate_mode, fp32_had          | weight.calib_algo (已内置) |
+# | OmniQuant  | let, lwc, epochs               | weight.calib_algo, ste (已内置) |
+# | GPTAQ      | actorder, percdamp             | 否                      |
+#

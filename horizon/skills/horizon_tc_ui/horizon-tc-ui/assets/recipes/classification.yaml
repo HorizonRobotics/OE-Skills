@@ -1,0 +1,125 @@
+# ============================================================================
+# ImageNet 风格分类任务配置骨架
+# ============================================================================
+# 适用场景：ResNet、MobileNet、EfficientNet 等单输出分类模型
+# 输入：单张图像（1x3x224x224 典型尺寸）
+# 输出：分类 logits / softmax 概率
+#
+# 使用方式：
+#   1. 将 onnx_model / caffe_model 路径替换为实际路径
+#   2. 根据实际模型修改 input_name、input_shape
+#   3. 选择 nv12 或 rgb 的 input_type_rt 方案（见下方注释）
+#   4. 准备校准数据目录，修改 cal_data_dir
+#   5. 指定目标 march
+# ============================================================================
+
+model_parameters:
+  # ONNX 模型路径（与 caffe_model 二选一）
+  onnx_model: './model/resnet50.onnx'
+  # caffe_model: './model/resnet50.caffemodel'
+  # prototxt: './model/resnet50.prototxt'
+
+  # 目标芯片架构（必填）
+  # 可选值：nash-b-lite, nash-b, nash-b-plus, nash-e, nash-m, nash-p, nash-h
+  march: 'nash-h'
+
+  # 编译输出目录
+  working_dir: './model_output'
+
+  # 输出模型文件前缀
+  output_model_file_prefix: 'resnet50'
+
+  # 是否导出中间层输出（调试用，生产环境建议关闭）
+  layer_out_dump: false
+
+  # 移除指定类型的节点（分号分隔）
+  # 可选值来自 schema_yaml.removal_list: Quantize, Transpose, Dequantize, Cast, Reshape, Softmax
+  remove_node_type: 'Quantize;Transpose;Dequantize;Cast;Reshape;Softmax'
+
+input_parameters:
+  # 模型输入节点名称（需与 ONNX/Caffe 模型中一致）
+  input_name: 'input'
+
+  # 输入张量形状（NCHW 格式：batch x channel x height x width）
+  # 分类模型典型尺寸：1x3x224x224
+  input_shape: '1x3x224x224'
+
+  # ===== 方案 A: nv12 输入（推荐，BPU 硬件预处理支持） =====
+  # nv12 是 YUV420 格式，BPU 内置硬件预处理，推理效率最高
+  # 配合 input_space_and_range 可选择全范围或视频范围
+  input_type_rt: 'nv12'
+  input_space_and_range: 'regular'          # 可选: regular（全范围）, bt601_video（视频范围）
+  input_type_train: 'bgr'                   # 训练时数据格式
+  input_layout_train: 'NCHW'                # 训练时 layout（NCHW 或 NHWC）
+
+  # ===== 方案 B: rgb 输入（备选） =====
+  # 当输入数据已经是 RGB 格式且不需要 YUV 转换时使用
+  # input_type_rt: 'rgb'
+  # input_type_train: 'rgb'
+  # input_layout_train: 'NCHW'
+
+  # 归一化参数（均值、缩放因子）
+  # ImageNet 标准均值: 123.675, 116.28, 103.53（BGR 顺序）
+  # ImageNet 标准 std: 58.395, 57.12, 57.375
+  mean_value: '123.675,116.28,103.53'
+  std_value: '58.395,57.12,57.375'
+
+calibration_parameters:
+  # 校准数据目录（存放 npy 格式的校准样本）
+  cal_data_dir: './calibration_data'
+
+  # 校准算法类型
+  # 可选值: kl（KL 散度，推荐）, max（最大值）, skip（跳过校准）
+  calibration_type: 'kl'
+
+  # 是否按通道独立校准（分类任务通常关闭）
+  per_channel: false
+
+  # 最大百分位裁剪（0~1 之间，用于去除极端离群值）
+  # 不设置时使用默认行为
+  # max_percentile: 0.9995
+
+  # 校准预处理是否在 CPU 上执行
+  preprocess_on: false
+
+compiler_parameters:
+  # 编译模式
+  # 可选值: latency（低延迟，推荐）, bandwidth（低带宽）, balance（均衡）
+  compile_mode: 'latency'
+
+  # 优化级别（hbdk4 支持 O0, O1, O2）
+  # O0: 无优化（调试用）, O1: 基础优化, O2: 推荐优化级别
+  optimize_level: 'O2'
+
+  # BPU 核心数（nash-m 仅支持 1）
+  # nash-h / nash-p 支持 1~4
+  core_num: 1
+
+  # 编译并行任务数
+  jobs: 16
+
+  # 每个全连接层最大编译时间（毫秒），0 表示不限制
+  max_time_per_fc: 0
+
+  # 编译调试模式（生产环境可关闭以减少日志）
+  debug: true
+
+  # 输入数据源（按输入节点名称指定）
+  # nv12 输入默认使用 pyramid（硬件 ISP 金字塔）
+  # rgb/bgr 输入默认使用 ddr
+  # input_source:
+  #   input: 'pyramid'
+
+  # 缓存模式
+  # 可选值: disable（禁用）, enable（启用）, force_overwrite（强制覆盖）
+  cache_mode: 'disable'
+  # cache_path: ''
+
+  # 均衡因子（仅 compile_mode=balance 时需要指定，范围 0~100）
+  # balance_factor: 50
+
+  # 启用 VPU（向量处理单元）
+  # enable_vpu: true
+
+  # 启用 SPU（标量处理单元）
+  # enable_spu: true

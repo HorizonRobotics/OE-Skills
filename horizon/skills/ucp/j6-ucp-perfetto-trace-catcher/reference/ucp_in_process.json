@@ -1,0 +1,4 @@
+{
+  "backend": "in_process",
+  "trace_config": "ucp_in_process.cfg"
+}

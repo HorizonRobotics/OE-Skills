@@ -1,0 +1,19 @@
+# Copyright (c) 2024 Horizon Robotics.All Rights Reserved.
+#
+# The material in this file is confidential and contains trade secrets
+# of Horizon Robotics Inc. This is proprietary information owned by
+# Horizon Robotics Inc. No part of this work may be disclosed,
+# reproduced, copied, transmitted, or used in any way for any purpose,
+# without the express written permission of Horizon Robotics Inc.
+
+model_parameters:
+  caffe_model: ''
+  prototxt: ''
+  onnx_model: ''
+  march: ''
+input_parameters:
+  input_type_rt: 'nv12'
+  input_type_train: 'bgr'
+  input_layout_train: 'NCHW'
+compiler_parameters:
+  optimize_level: 'O2'

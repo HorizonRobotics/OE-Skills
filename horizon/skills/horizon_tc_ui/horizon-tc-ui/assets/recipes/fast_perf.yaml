@@ -1,0 +1,77 @@
+# ============================================================================
+# fast_perf 模式最小配置骨架
+# ============================================================================
+# 适用场景：快速性能评估、模型可行性验证
+# 特点：
+#   - 使用 featuremap 输入（跳过图像预处理）
+#   - O0 优化级别（最小编译时间）
+#   - 跳过校准（optimization: run_fast）
+#   - 无需校准数据
+#
+# 使用方式：
+#   1. 修改模型路径和 march
+#   2. 指定 input_name 和 input_shape
+#   3. 直接运行编译，快速得到性能评估结果
+#
+# 注意：此配置仅用于性能评估，不生成可用于部署的量化模型
+# ============================================================================
+
+model_parameters:
+  # ONNX 模型路径
+  onnx_model: './model/model.onnx'
+
+  # 目标芯片架构（必填）
+  march: 'nash-h'
+
+  # 编译输出目录
+  working_dir: './model_output'
+
+  # 输出模型文件前缀
+  output_model_file_prefix: 'model_fast_perf'
+
+input_parameters:
+  # 模型输入节点名称
+  input_name: 'input'
+
+  # 输入张量形状（必须指定，fast_perf 模式不会自动推断）
+  input_shape: '1x3x224x224'
+
+  # ===== featuremap 输入（fast_perf 模式要求） =====
+  # featuremap 表示输入已经是预处理好的特征张量，跳过图像解码和预处理
+  input_type_rt: 'featuremap'
+  input_type_train: 'featuremap'
+
+  # featuremap 输入不需要 input_layout_train
+  # input_layout_train 不需要配置
+
+  # featuremap 输入不需要归一化参数
+  # mean_value / scale_value / std_value 不需要配置
+
+calibration_parameters:
+  # ===== fast_perf 模式：跳过校准 =====
+  # optimization: run_fast 表示跳过校准阶段，直接进行快速性能评估
+  # 此模式下不需要 cal_data_dir 和 calibration_type
+  optimization: 'run_fast'
+
+compiler_parameters:
+  # 编译模式
+  compile_mode: 'latency'
+
+  # 优化级别：O0（无优化，编译速度最快）
+  # O0 适用于快速验证模型结构和性能基线
+  optimize_level: 'O0'
+
+  # BPU 核心数
+  core_num: 1
+
+  # 编译并行任务数
+  jobs: 32
+
+  # 全连接层编译超时（毫秒），0 表示不限制
+  max_time_per_fc: 0
+
+  # 编译调试模式
+  debug: true
+
+  # 缓存模式
+  cache_mode: 'disable'

@@ -1,0 +1,107 @@
+# ============================================================================
+# 语义分割任务配置骨架
+# ============================================================================
+# 适用场景：UNet、DeepLab、PSPNet、SegFormer 等分割模型
+# 特点：高分辨率输入、内存敏感、较大 jobs 数
+#
+# 使用方式：
+#   1. 修改模型路径和 march
+#   2. 根据实际模型调整 input_shape（分割模型常用 512x512 或更大）
+#   3. 分割模型内存占用较大，注意 L2M 和 jobs 参数配置
+#   4. 准备校准数据
+# ============================================================================
+
+model_parameters:
+  # ONNX 模型路径
+  onnx_model: './model/deeplabv3.onnx'
+
+  # 目标芯片架构（必填）
+  march: 'nash-h'
+
+  # 编译输出目录
+  working_dir: './model_output'
+
+  # 输出模型文件前缀
+  output_model_file_prefix: 'deeplabv3'
+
+  # 移除冗余节点
+  remove_node_type: 'Quantize;Transpose;Dequantize;Cast;Reshape;Softmax'
+
+  # 中间层输出 dump（调试用，分割模型输出较大，生产环境建议关闭）
+  layer_out_dump: false
+
+input_parameters:
+  # 模型输入节点名称
+  input_name: 'input'
+
+  # 输入张量形状（NCHW）
+  # 分割模型典型尺寸：1x3x512x512 或 1x3x1024x512
+  # 高分辨率输入会显著增加内存和编译时间
+  input_shape: '1x3x512x512'
+
+  # 运行时输入类型（nv12 方案，推荐）
+  input_type_rt: 'nv12'
+  input_space_and_range: 'regular'
+  input_type_train: 'bgr'
+  input_layout_train: 'NCHW'
+
+  # 归一化参数
+  # 根据训练时的预处理方式配置
+  # 如果使用 ImageNet 预训练权重，使用 ImageNet 均值/std
+  mean_value: '123.675,116.28,103.53'
+  std_value: '58.395,57.12,57.375'
+
+calibration_parameters:
+  # 校准数据目录
+  # 分割模型建议 100~300 张校准样本
+  cal_data_dir: './calibration_data'
+
+  # 校准算法类型
+  # kl: KL 散度（推荐，分割任务对量化精度要求较高）
+  calibration_type: 'kl'
+
+  # 按通道独立校准
+  per_channel: false
+
+  # 最大百分位裁剪
+  # max_percentile: 0.9995
+
+  # 校准预处理
+  preprocess_on: false
+
+compiler_parameters:
+  # 编译模式：latency（低延迟优先）
+  compile_mode: 'latency'
+
+  # 优化级别：O2（推荐）
+  optimize_level: 'O2'
+
+  # BPU 核心数
+  core_num: 1
+
+  # 编译并行任务数
+  # 分割模型层数多、计算量大，建议增大 jobs 数以加速编译
+  jobs: 32
+
+  # 全连接层编译超时（毫秒），0 表示不限制
+  max_time_per_fc: 0
+
+  # 编译调试模式
+  debug: true
+
+  # L2 内存限制（字节）
+  # 分割模型高分辨率输入时内存消耗大，可通过此参数限制 L2M 使用量
+  # 最大值为 24 * 1024 * 1024 = 25165824（24MB）
+  # nash-b / nash-e / nash-m 不支持此参数
+  # nash-h / nash-p 可使用此参数
+  # max_l2m_size: 25165824
+
+  # 输入数据源
+  # input_source:
+  #   input: 'pyramid'
+
+  # 缓存模式
+  cache_mode: 'disable'
+
+  # 均衡因子（仅 compile_mode=balance 时需要）
+  # balance_factor: 50

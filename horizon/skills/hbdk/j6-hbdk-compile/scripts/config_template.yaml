@@ -1,0 +1,56 @@
+# 模型编译配置文件
+# 生成时间: {{timestamp}}
+# PTQ 多输入支持已优化（按分号分割 input_name/input_type_rt/mean_value 等）
+
+# ============== 基本配置 ==============
+model_path: ""                    # 模型路径 (.onnx 或 .bc)，必填
+output_dir: ""                    # 输出目录（从 PTQ working_dir 自动映射，或默认 compile_<timestamp>）
+output_model_file_prefix: ""      # 新增：自定义编译产物名称（.hbm / _converted.bc 前缀），为空则使用模型文件名
+march: "nash-e"                   # 目标平台: nash-e, nash-m, nash-p, nash-h, nash-b, nash-b-lite, nash-b-plus
+
+# ============== 输入源配置 ==============
+# 支持 PTQ 多输入（分号分隔），每个输入独立配置 name/source_type/mean/std/data_type
+# data_type 为训练时的数据格式，支持: rgb, bgr, yuv444, featuremap
+# featuremap 输入通常 mean/std 设置为 null 或省略
+# input_sources:
+#   - name: "camera_front_image"           # 输入节点名称（与 PTQ input_name 对应）
+#     source_type: "pyramid"               # 类型: ddr, pyramid, resizer
+#     mean: [128.0, 128.0, 128.0]          # 均值 (None 表示不处理)
+#     std: [128.0, 128.0, 128.0]           # 标准差 (None 表示不处理)
+#     divisor: 1.0                         # 归一化除数
+#     data_type: "yuv444"                  # 训练数据格式
+#   - name: "camera_front_cali_bboxes"     # ddr/featuremap 输入只保留 name/source_type/data_type 三行
+#     source_type: "ddr"
+#     data_type: "featuremap"
+
+# ============== 节点删除配置 ==============
+# 当前支持的**正确组合**：
+# 1. remove_node_type: ["Quantize"] （仅删除所有 Quantize，最常用）
+# 2. remove_node_type: ["Quantize"] + preserve_input_nodes: ["node_to_keep"]
+# 3. remove_input_nodes: ["specific_input_node"] （不要同时设置 remove_node_type: ["Quantize"]）
+# **禁止组合**（会立即报错停止编译）：
+# - remove_node_type 包含 Quantize 时同时提供 remove_input_nodes
+# - remove_node_type 包含 Dequantize 时同时提供 remove_output_nodes
+remove_node_type: []              # ["Quantize"] 或 ["Dequantize"]
+remove_input_nodes: []            # 精确删除指定输入节点相邻 QDQ（与 remove_node_type 互斥）
+remove_output_nodes: []           # 精确删除指定输出节点相邻 QDQ
+preserve_input_nodes: []          # 与 remove_node_type=Quantize 配合使用，保留白名单
+preserve_output_nodes: []         # 与 remove_node_type=Dequantize 配合使用
+
+# ============== 编译参数 ==============
+debug: true                       # 开启 debug 模式，默认 true
+input_no_padding: true            # 输入不填充
+output_no_padding: true           # 输出不填充
+enable_hpc: true                  # 开启 HPC (需要 HBDK >= 4.9.2)
+enable_vpu: true                  # 开启 VPU
+core_num: 1                       # 编译核数
+opt_level: 2                      # 优化等级
+jobs: 32                          # 并行编译数
+max_l2m_size: 0                   # 最大 L2M 大小，0 表示不限制
+max_time_per_fc: 0                # 每个 function 最大编译时间(秒)，0 表示不限制
+cache_path: ""                    # Cache 路径，为空则不启用
+cache_mode: "enable"              # Cache 模式: enable, disable, readonly
+
+# ============== 性能测试配置 ==============
+perf_ip: ""                       # 开发板 IP 地址，为空则 hbm_perf 不设置 remote_ip 参数
+perf_username: "root"             # 开发板用户名

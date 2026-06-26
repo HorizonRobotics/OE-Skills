@@ -1,0 +1,56 @@
+eval_config_snapshot:
+  Qwen2.5-1.5B|wikitext2|2048|512:
+    bs: 1
+    dataset: wikitext2
+    date: '2026-04-02'
+    inference_per_block: false
+    num_samples: 512
+    seq_len: 2048
+    source: 实测
+  Qwen2.5-7B|wikitext2|2048|512:
+    bs: 1
+    dataset: wikitext2
+    date: '2026-04-02'
+    inference_per_block: false
+    num_samples: 512
+    seq_len: 2048
+    source: 实测
+  Qwen3-0.6B|wikitext2|2048|512:
+    bs: 1
+    dataset: wikitext2
+    date: '2026-04-02'
+    inference_per_block: false
+    num_samples: 512
+    seq_len: 2048
+    source: 实测
+  Qwen3-1.7B|wikitext2|2048|512:
+    bs: 1
+    dataset: wikitext2
+    date: '2026-04-02'
+    inference_per_block: false
+    num_samples: 512
+    seq_len: 2048
+    source: 实测
+  Qwen3-30B-A3B|wikitext2|1024|32:
+    bs: 1
+    dataset: wikitext2
+    date: '2026-03-21'
+    inference_per_block: false
+    num_samples: 32
+    seq_len: 1024
+    source: 实测
+  Qwen3.5-0.8B|wikitext2|2048|512:
+    bs: 1
+    dataset: wikitext2
+    date: '2026-04-03'
+    inference_per_block: false
+    num_samples: 512
+    seq_len: 2048
+    source: 实测
+pretrain_cache:
+  Qwen2.5-1.5B|wikitext2|2048|512: 9.27688408
+  Qwen2.5-7B|wikitext2|2048|512: 6.84547186
+  Qwen3-0.6B|wikitext2|2048|512: 20.9685173
+  Qwen3-1.7B|wikitext2|2048|512: 16.7104
+  Qwen3-30B-A3B|wikitext2|1024|32: 9.5762
+  Qwen3.5-0.8B|wikitext2|2048|512: 17.18192101
