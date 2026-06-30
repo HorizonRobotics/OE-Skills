@@ -98,7 +98,7 @@
 # 目录结构
 
 ```plain&#x20;text
-oe-skills/
+OE-Skills/
 ├── README.md                # 本文件
 ├── agent-setup.md           # Agent 安装指引文档
 ├── setup.sh                 # 安装脚本，将 horizon/ 资源铺设到目标项目 .horizon/
