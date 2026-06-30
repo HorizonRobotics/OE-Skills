@@ -9,7 +9,7 @@
 - Skill 索引：`.horizon/skill-index.json`
 - 文档目录：`.horizon/docs/`
 - Skill 目录：`.horizon/skills/`
-- 当前 release 版本：`0.1.11`
+- 当前 release 版本：`0.2.0`
 
 ## 2. 使用规则
 
@@ -46,7 +46,7 @@
 
 ## 6. 内置 Skills
 
-- `horizon-router@0.1.11` -> `.horizon/skills/horizon-router/SKILL.md`: Horizon 顶层路由 skill，用于在具体 skill 之间做渐进式任务分流。
+- `horizon-router@0.2.0` -> `.horizon/skills/horizon-router/SKILL.md`: Horizon 顶层路由 skill，用于在具体 skill 之间做渐进式任务分流。
 
 ### OE 包环境
 
