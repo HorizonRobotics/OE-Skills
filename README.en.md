@@ -126,11 +126,11 @@ Install this skill: https://github.com/HorizonRobotics/OE-Skills/blob/main/agent
 </tr>
 <tr>
 <td>ONNX model deployment</td>
-<td colspan="2">Requires multiple Skills, see [ONNX Model Deployment Full Example](docs/en/onnx-deployment/index.md)</td>
+<td colspan="2">Requires multiple Skills, see <a href="docs/en/onnx-deployment/index.md">ONNX Model Deployment Full Example</a></td>
 </tr>
 <tr>
 <td>PyTorch model deployment</td>
-<td colspan="2">Requires multiple Skills, see [PyTorch Model Deployment Full Example](docs/en/pytorch-deployment/index.md)</td>
+<td colspan="2">Requires multiple Skills, see <a href="docs/en/pytorch-deployment/index.md">PyTorch Model Deployment Full Example</a></td>
 </tr>
 </tbody>
 </table>
