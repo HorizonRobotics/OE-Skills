@@ -90,8 +90,8 @@
 | 编写hbm评测代码   | 帮我评测一下`xxx.hbm`的精度，calib评测代码为`val.py`，开发板`xx.xx.xx.xx`。若网络延迟较高，减少评测帧数到100                                      | j6-ucp-hbm-infer                 |
 | 编写hbm部署代码   | 我有四个小模型，放在`{model_path}`，这几个模型间没有数据依赖，可同时推理，帮我写一下ucp部署代码，测试使用开发板`xx.xx.xx.xx`                                  | j6-ucp-infer-generating          |
 | 单算子测试验证     | 帮我写一个 Conv2d 的量化编译全流程代码，输入是 (1, 3, 32, 32)，march 为 nash-p                                                      | j6-plugin-hbdk-generating        |
-| onnx模型部署    | 需综合调用多个skill，具体使用经验请参考文档[onnx模型部署全流程示例](https://horizonrobotics.feishu.cn/wiki/JrvywmYHxioBUKk5sCAcw4qYnFf)    |                                  |
-| pytorch模型部署 | 需综合调用多个skill，具体使用经验请参考文档[pytorch模型部署全流程示例](https://horizonrobotics.feishu.cn/wiki/JrvywmYHxioBUKk5sCAcw4qYnFf) |                                  |
+| onnx模型部署    | 需综合调用多个skill，具体使用经验请参考文档[onnx模型部署全流程示例](docs/zh/onnx-deployment/index.md)    |                                  |
+| pytorch模型部署 | 需综合调用多个skill，具体使用经验请参考文档[pytorch模型部署全流程示例](docs/zh/pytorch-deployment/index.md) |                                  |
 
 
 
@@ -100,21 +100,29 @@
 ```plain&#x20;text
 OE-Skills/
 ├── README.md                # 本文件
+├── README.en.md             # English README
 ├── agent-setup.md           # Agent 安装指引文档
 ├── setup.sh                 # 安装脚本，将 horizon/ 资源铺设到目标项目 .horizon/
-└── horizon/                 # 资源目录（安装时复制到目标项目）
-    ├── HORIZON.md           # 工作区规则和使用说明
-    ├── VERSION              # 当前版本号
-    ├── skill-index.json     # Skill 索引（模块、路径、描述、触发条件）
-    ├── docs/                # Horizon 工具链离线文档
-    └── skills/              # 按模块组织的 Skill 集合
-        ├── horizon-router/  # 顶层路由 Skill
-        ├── hbdk/            # HBDK 编译相关
-        ├── plugin/          # Horizon Plugin（QAT 量化）
-        ├── hmct/            # HMCT / PTQ 量化
-        ├── ucp/             # UCP / 板端推理
-        ├── horizon_tc_ui/   # 可视化分析工具
-        └── llm/             # LLM 量化与压缩
+├── docs/                    # 部署全流程示例文档
+│   ├── zh/                  # 中文文档
+│   │   ├── onnx-deployment/  # ONNX 模型部署全流程示例
+│   │   └── pytorch-deployment/  # PyTorch 模型部署全流程示例
+│   └── en/                  # 英文文档
+│       ├── onnx-deployment/  # ONNX 模型部署全流程示例（英文版）
+│       └── pytorch-deployment/  # PyTorch 模型部署全流程示例（英文版）
+├── horizon/                 # 资源目录（安装时复制到目标项目）
+│   ├── HORIZON.md           # 工作区规则和使用说明
+│   ├── VERSION              # 当前版本号
+│   ├── skill-index.json     # Skill 索引（模块、路径、描述、触发条件）
+│   ├── docs/                # Horizon 工具链离线文档
+│   └── skills/              # 按模块组织的 Skill 集合
+│       ├── horizon-router/  # 顶层路由 Skill
+│       ├── hbdk/            # HBDK 编译相关
+│       ├── plugin/          # Horizon Plugin（QAT 量化）
+│       ├── hmct/            # HMCT / PTQ 量化
+│       ├── ucp/             # UCP / 板端推理
+│       ├── horizon_tc_ui/   # 可视化分析工具
+│       └── llm/             # LLM 量化与压缩
 ```
 
 

@@ -126,11 +126,11 @@ Install this skill: https://github.com/HorizonRobotics/OE-Skills/blob/main/agent
 </tr>
 <tr>
 <td>ONNX model deployment</td>
-<td colspan="2">Requires multiple Skills</td>
+<td colspan="2">Requires multiple Skills, see [ONNX Model Deployment Full Example](docs/en/onnx-deployment/index.md)</td>
 </tr>
 <tr>
 <td>PyTorch model deployment</td>
-<td colspan="2">Requires multiple Skills</td>
+<td colspan="2">Requires multiple Skills, see [PyTorch Model Deployment Full Example](docs/en/pytorch-deployment/index.md)</td>
 </tr>
 </tbody>
 </table>
@@ -143,19 +143,26 @@ OE-Skills/
 ├── README.en.md             # This file
 ├── agent-setup.md           # Agent installation guide
 ├── setup.sh                 # Installation script, deploys horizon/ resources to target project .horizon/
-└── horizon/                 # Resource directory (copied to target project during installation)
-    ├── HORIZON.md           # Workspace rules and usage instructions
-    ├── VERSION              # Current version number
-    ├── skill-index.json     # Skill index (module, path, description, trigger conditions)
-    ├── docs/                # Horizon toolchain offline documentation
-    └── skills/              # Skill collections organized by module
-        ├── horizon-router/  # Top-level routing skill
-        ├── hbdk/            # HBDK compilation related
-        ├── plugin/          # Horizon Plugin (QAT quantization)
-        ├── hmct/            # HMCT / PTQ quantization
-        ├── ucp/             # UCP / on-board inference
-        ├── horizon_tc_ui/   # Visualization analysis tools
-        └── llm/             # LLM quantization and compression
+├── docs/                    # Deployment full-process example documents
+│   ├── zh/                  # Chinese docs
+│   │   ├── onnx-deployment/  # ONNX model deployment full example
+│   │   └── pytorch-deployment/  # PyTorch model deployment full example
+│   └── en/                  # English docs
+│       ├── onnx-deployment/  # ONNX model deployment full example
+│       └── pytorch-deployment/  # PyTorch model deployment full example
+├── horizon/                 # Resource directory (copied to target project during installation)
+│   ├── HORIZON.md           # Workspace rules and usage instructions
+│   ├── VERSION              # Current version number
+│   ├── skill-index.json     # Skill index (module, path, description, trigger conditions)
+│   ├── docs/                # Horizon toolchain offline documentation
+│   └── skills/              # Skill collections organized by module
+│       ├── horizon-router/  # Top-level routing skill
+│       ├── hbdk/            # HBDK compilation related
+│       ├── plugin/          # Horizon Plugin (QAT quantization)
+│       ├── hmct/            # HMCT / PTQ quantization
+│       ├── ucp/             # UCP / on-board inference
+│       ├── horizon_tc_ui/   # Visualization analysis tools
+│       └── llm/             # LLM quantization and compression
 ```
 
 # Skills Overview
